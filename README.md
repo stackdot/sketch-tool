@@ -40,8 +40,8 @@ npm install sketch-tool --save
 To use:
 ```javascript
 
-const NewLib = require('sketch-tool')({
-	// Params for your Lib
+const SketchTool = require('sketch-tool')
+const Sketch = new SketchTool({
 	foo: 'bar'
 })
 
