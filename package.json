@@ -1,0 +1,42 @@
+{
+  "name": "sketch-tool",
+  "version": "1.0.0",
+  "description": "Library to use SketchTool CLI tool more easily",
+  "main": "app/index.js",
+  "scripts": {
+    "test": "node_modules/.bin/istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
+    "generate-docs": "node_modules/.bin/jsdoc --configure .jsdoc.json --verbose",
+    "mocha": "./node_modules/mocha/bin/_mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stackdot/sketch-tool.git"
+  },
+  "bugs": {
+    "url": "https://github.com/stackdot/sketch-tool/issues"
+  },
+  "homepage": "https://github.com/stackdot/sketch-tool#readme",
+  "author": "stackdot",
+  "license": "MIT",
+  "engineStrict": true,
+  "tags": [ "api", "lib", "library", "stackdot" ],
+  "engines": {
+    "node": ">6.0.0"
+  },
+  "dependencies": {
+    "bluebird": "^3.4.5",
+    "colors": "^1.1.2",
+    "debug": "^2.2.0",
+    "lodash": "^4.14.2"
+  },
+  "devDependencies": {
+    "coveralls": "^2.11.12",
+    "istanbul": "^0.4.5",
+    "mocha": "^3.0.2",
+    "nock": "^8.0.0",
+    "chai": "^3.5.0",
+    "jsdoc": "^3.4.0",
+    "minami": "^1.1.1",
+    "mocha-lcov-reporter": "^1.2.0"
+  }
+}
