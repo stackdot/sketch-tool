@@ -5,7 +5,6 @@ build:
     pull: true
     environment:
       - COVERALLS_REPO_TOKEN=$$COVERALLS_TOKEN
-      - COVERALLS_SERVICE_NAME=stackdot/sketch-tool
     commands:
       - npm update
       - npm test

@@ -10,16 +10,16 @@ const lodash 	= require('lodash')
 
 
 /**
- *  NewLib Class
+ *  SketchTool Class
  */
-class NewLib {
+class SketchTool {
 
 
 
 	/**
 	 *  Constructor
 	 *  @param  {Object} params Params to be set into this instance
-	 *  @return {NewLib}        NewLib instance
+	 *  @return {SketchTool}        SketchTool instance
 	 */
 	constructor( params ){
 
@@ -36,9 +36,9 @@ class NewLib {
 
 /**
  *  Export
- *  @param  {Object} 	params 	NewLib library params
- *  @return {NewLib}        New instance of the NewLib library
+ *  @param  {Object} 	params 	SketchTool library params
+ *  @return {SketchTool}        New instance of the SketchTool library
  */
 module.exports = ( params )=> {
-	return new NewLib( params )
+	return new SketchTool( params )
 }
