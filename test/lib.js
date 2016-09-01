@@ -9,10 +9,8 @@ const should 		= chai.should()
 const expect		= require("chai").expect
 const assert 		= require('assert')
 const nock 			= require('nock')
-const Lib 			= require('../app/index.js')({
-	foo: 'bar'
-})
-
+const Lib 			= require('../app/index.js')
+const Sketch		= new Lib()
 
 // http scope:
 let scope = null
