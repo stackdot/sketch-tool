@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>index.js - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="SketchTool.html">SketchTool</a><ul class='methods'><li data-type='method'><a href="SketchTool.html#exportCall">exportCall</a></li><li data-type='method'><a href="SketchTool.html#getArgs">getArgs</a></li><li data-type='method'><a href="SketchTool.html#listCall">listCall</a></li><li data-type='method'><a href="SketchTool.html#runCommand">runCommand</a></li><li data-type='method'><a href="SketchTool.html#toolOptions">toolOptions</a></li></ul></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">index.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>'use strict'
+
+
+
+// Required Modules:
+const colors 	= require('colors')
+const debug 	= require('debug')('sketch-tool:main')
+const lodash 	= require('lodash')
+const path 		= require('path')
+const Promise 	= require('bluebird')
+const spawn 	= require('child_process').spawn
+
+
+/**
+ *  SketchTool Class
+ */
+class SketchTool {
+
+
+
+	/**
+	 *  Constructor
+	 *  @param  {Object} params Params to be set into this instance
+	 *  @return {SketchTool}        SketchTool instance
+	 */
+	constructor( params = {} ){
+
+		debug('Instance Created:', params )
+		this.params 	= params
+		this.bin 		= this.params.bin || path.resolve( __dirname, '../sketchtool/bin/sketchtool' )
+		this.file 		= this.params.file
+
+		console.log('bin', this.bin, this.file)
+
+		this.list = {
+			artboards: 		this.listCall.bind( this, 'artboards' ),
+			formats: 		this.listCall.bind( this, 'formats' ),
+			layers: 		this.listCall.bind( this, 'layers' ),
+			pages: 			this.listCall.bind( this, 'pages' ),
+			slices: 		this.listCall.bind( this, 'slices' )
+		}
+
+		this.export = {
+			artboards: 		this.exportCall.bind( this, 'artboards' )
+		}
+
+		return this
+
+	}
+
+
+
+	/**
+	 *  Sketch Tool CLI options
+	 *  @return {Array} List of cli options
+	 */
+	toolOptions(){
+		return [
+			'formats',
+			'use-id-for-name',
+			'item',
+			'items',
+			'background',
+			'compression',
+			'version',
+			'include-symbols',
+			'bounds',
+			'reveal',
+			'scales',
+			'compact',
+			'overwriting',
+			'trimmed',
+			'group-contents-only',
+			'include-namespaces',
+			'progressive',
+			'save-for-web',
+			'output'
+		]
+	}
+
+
+
+	/**
+	 *  Call the list function with subcommand using `type`
+	 *  @param  {String} type   	Subcommand to be run, eg: artboards, formats, etc.
+	 *  @param  {Object} params 	Parameters to be sent with this command
+	 *  @return {Promise}        	Promise
+	 */
+	listCall( type, params = {} ){
+		return this.runCommand(['list', type], this.getArgs( params ), true)
+	}
+
+
+
+	/**
+	 *  Get a list of valid options in the format spawn needs
+	 *  @param  {Object} params 	Key values of the options we want to pass to sketchtool
+	 *  @return {Array}        		Array of options formatted in spawns format
+	 */
+	getArgs( params ){
+		return lodash.map(
+			lodash.pickBy( params, ( param, key ) => lodash.includes( this.toolOptions(), key )),
+			( param, key ) => `--${key}=${param}`
+		)
+	}
+
+
+
+	/**
+	 *  Call the exports function with subcommands using `type`
+	 *  @param  {String} type   	Subcommand to be run, eg: artboards, layers, etc.
+	 *  @param  {Object} params 	Parameters to be sent with this subcommand
+	 *  @return {Promise}        	Promise
+	 */
+	exportCall( type, params = {} ){
+		return this.runCommand(['export', type], this.getArgs( params ), false)
+	}
+
+
+
+	/**
+	 *  Spawn a child process of sketch-tool and run a given command with parameters
+	 *  @param  {String} command 	Command to be run
+	 *  @param  {Array}  args    	Command arguments to be sent with the command
+	 *  @return {Promise}         	Promise
+	 */
+	runCommand( command, args = [], jsonOutput = false ){
+		return new Promise((resolve, reject) => {
+			debug('args', lodash.flatten([ command, args, this.file ]))
+			const proc = spawn( this.bin, lodash.flatten([ command, args, this.file ]) )
+			let data = ''
+			let err = ''
+			proc.stdout.on('data', ( chunk ) => {
+				debug('Got Response')
+				data += chunk.toString()
+			})
+			proc.stderr.on('data', ( chunk ) => {
+				chunk = chunk.toString()
+				debug('Error Chunk:', chunk)
+				err += chunk
+			})
+			proc.on('error', reject)
+			proc.on('exit', ( code ) => {
+				debug('Exited', code)
+				if( jsonOutput ) data = JSON.parse( data )
+				resolve( data, err )
+			})
+		})
+	}
+
+
+}
+
+
+
+module.exports = SketchTool
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Thu Sep 01 2016 13:49:13 GMT-0400 (EDT) using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

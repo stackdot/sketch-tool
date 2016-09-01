@@ -10,7 +10,7 @@
 
 
 
-SketchTool
+Sketch Tool
 ===
 
 Library to use SketchTool CLI tool more easily
