@@ -41,7 +41,10 @@ class SketchTool {
 		}
 
 		this.export = {
-			artboards: 		this.exportCall.bind( this, 'artboards' )
+			artboards: 		this.exportCall.bind( this, 'artboards' ),
+			layers: 		this.exportCall.bind( this, 'layers' ),
+			pages: 			this.exportCall.bind( this, 'pages' ),
+			slices: 		this.exportCall.bind( this, 'slices' )
 		}
 
 		return this
