@@ -1,5 +1,9 @@
 ## Sketch Tool Release Notes
 
+### 40
+
+- Fixed an export crash when the document refers to missing symbols.
+
 ### 3.5.2
 
 - Added a --include-namespaces option for SVG export.
