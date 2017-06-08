@@ -1,25 +1,10 @@
 
-build:
+pipeline:
   compile:
     image: node:6.3.1
-    pull: true
-    environment:
-      - COVERALLS_REPO_TOKEN=$$COVERALLS_TOKEN
     commands:
       - npm update
-      - npm test
 
-
-publish:
-  
   npm:
-    username: $$NPM_USERNAME
-    password: $$NPM_PASSWORD
-    email: $$NPM_EMAIL
-    registry: $$NPM_REGISTRY
-    always_auth: $$NPM_ALWAYS_AUTH
+    image: plugins/npm
 
-
-cache:
-  mount:
-    - node_modules
