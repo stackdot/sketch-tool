@@ -145,7 +145,17 @@ class SketchTool {
 			proc.on('error', reject)
 			proc.on('exit', ( code ) => {
 				debug('Exited', code)
-				if( jsonOutput ) data = JSON.parse( data )
+				if( code != 0 ){
+					console.log('Non 0 exit code. Error occured.')
+					reject( err )
+				}
+				if( jsonOutput ){
+					try {
+						data = JSON.parse( data )
+					} catch( err ) {
+						return reject( err )
+					}
+				}
 				resolve( data, err )
 			})
 		})
