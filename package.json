@@ -1,6 +1,6 @@
 {
   "name": "sketch-tool",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Library to use SketchTool CLI tool more easily",
   "main": "app/index.js",
   "scripts": {
