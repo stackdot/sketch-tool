@@ -1,7 +1,6 @@
 'use strict'
 
 
-
 // Required Modules:
 const colors 	= require('colors')
 const debug 	= require('debug')('sketch-tool:main')
@@ -9,6 +8,8 @@ const lodash 	= require('lodash')
 const path 		= require('path')
 const Promise 	= require('bluebird')
 const spawn 	= require('child_process').spawn
+
+const TOOL_BIN_PATH = process.env.TOOL_BIN_PATH || path.resolve( __dirname, '../sketchtool/bin/sketchtool' )
 
 
 /**
@@ -27,7 +28,7 @@ class SketchTool {
 
 		debug('Instance Created:', params )
 		this.params 	= params
-		this.bin 		= this.params.bin || path.resolve( __dirname, '../sketchtool/bin/sketchtool' )
+		this.bin 		= this.params.bin || TOOL_BIN_PATH
 		this.file 		= this.params.file
 
 		console.log('bin', this.bin, this.file)
